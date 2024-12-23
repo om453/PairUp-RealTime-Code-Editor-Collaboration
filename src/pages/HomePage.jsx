@@ -27,7 +27,7 @@ const joinRoom = () => {
   }
   navigate(`/editor/${roomId}`,  // Navigate to the editor page
   {
-    state: {userName}
+    state: { username: userName }
   });
 };
 

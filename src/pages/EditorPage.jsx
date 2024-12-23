@@ -1,36 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 import Client from "../components/Client";
 import Editor from "../components/Editor";
-// import { Separator } from "@/components/ui/separator";
-import { ThemeToggle } from '../components/ThemeToggle';
-// import { initSocket } from "@/socket";
-// import { ACTIONS } from "@/Actions";
+import { ThemeToggle } from "../components/ThemeToggle";
+import { initSocket } from "../socket.js";
+import { ACTIONS } from "../Actions";
 import {
   useLocation,
   useNavigate,
   Navigate,
   useParams,
-} from 'react-router-dom';
+} from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 const EditorPage = () => {
   const socketRef = useRef(null);
-  const location = useLocation();
-  const { roomId } = useParams();
+  const location = useLocation(); // location is uesd to get the state passed from the previous page
+  const { roomId } = useParams(); // useParams is used to get the parameters passed in the URL
   const codeRef = useRef(null);
   const reactNavigator = useNavigate();
+
   const [clients, setClients] = useState([]);
 
   useEffect(() => {
     const init = async () => {
       socketRef.current = await initSocket();
-      socketRef.current.on('connect_error', (err) => handleErrors(err));
-      socketRef.current.on('connect_failed', (err) => handleErrors(err));
+      socketRef.current.on("connect_error", (err) => handleErrors(err));
+      socketRef.current.on("connect_failed", (err) => handleErrors(err));
 
       function handleErrors(e) {
-        console.log('socket error', e);
-        toast.error('Socket connection failed, try again later.');
-        reactNavigator('/');
+        console.log("socket error", e);
+        toast.error("Socket connection failed, try again later.");
+        reactNavigator("/");
       }
 
       socketRef.current.emit(ACTIONS.JOIN, {
@@ -39,28 +39,34 @@ const EditorPage = () => {
       });
 
       // Set up JOINED event listener
-      socketRef.current.on(ACTIONS.JOINED, ({ clients, username, socketId }) => {
-        if (username !== location.state?.username) {
-          toast.success(`${username} joined the room.`);
+      socketRef.current.on(
+        ACTIONS.JOINED,
+        ({ clients, username, socketId }) => {
+          if (username !== location.state?.username) {
+            toast.success(`${username} joined the room.`);
+          }
+          setClients(clients);
         }
-        setClients(clients);
-      });
+      );
 
       // Set up DISCONNECTED event listener
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
         toast.success(`${username} left the room.`);
-        setClients((prev) => prev.filter(client => client.socketId !== socketId));
-      });
+        setClients((prev) => {
+          return prev.filter((client) => client.socketId !== socketId);
+        });
+      });    
     };
-
     init();
 
+     // Clean up function to disconnect the socket and remove event listeners
     return () => {
-      socketRef.current?.disconnect();
-      socketRef.current?.off(ACTIONS.JOINED);
-      socketRef.current?.off(ACTIONS.DISCONNECTED);
-    };
-  }, [location.state?.username, roomId]);
+      socketRef.current.disconnect();
+      socketRef.current.off(ACTIONS.JOINED);
+      socketRef.current.off(ACTIONS.DISCONNECTED);
+    }; 
+      
+  }, []);
 
   if (!location.state) {
     return <Navigate to="/" />;
@@ -84,14 +90,10 @@ const EditorPage = () => {
           {/* <Separator className="my-4" /> */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-foreground">Connected</h3>
-            <div className="flex flex-col gap-2">
-              {clients.length > 0 ? (
-                clients.map((client) => (
-                  <Client key={client.socketId} username={client.username} />
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">No clients connected</p>
-              )}
+            <div className="flex flex-wrap gap-3">
+              {clients.map((client) => (
+                <Client key={client.socketId} username={client.username} />
+              ))}
             </div>
           </div>
         </div>
@@ -107,7 +109,13 @@ const EditorPage = () => {
 
       <div className="flex-1 p-4 h-screen overflow-hidden">
         <div className="h-full w-full rounded-lg border bg-card shadow-sm">
-          <Editor />
+          <Editor 
+          socketRef={socketRef}
+          roomId={roomId}
+          onCodeChange={(code) => {
+              codeRef.current = code;
+          }}
+          />
         </div>
       </div>
     </div>
