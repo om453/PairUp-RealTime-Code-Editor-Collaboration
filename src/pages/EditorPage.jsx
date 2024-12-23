@@ -46,6 +46,12 @@ const EditorPage = () => {
             toast.success(`${username} joined the room.`);
           }
           setClients(clients);
+
+          // Sync the code with the new user
+          socketRef.current.emit(ACTIONS.SYNC_CODE, {
+            code: codeRef.current,
+            socketId,
+        });
         }
       );
 
@@ -64,9 +70,24 @@ const EditorPage = () => {
       socketRef.current.disconnect();
       socketRef.current.off(ACTIONS.JOINED);
       socketRef.current.off(ACTIONS.DISCONNECTED);
-    }; 
-      
+    };
   }, []);
+
+  // Function to leave the room
+  async function copyRoomId() {
+    try {
+        await navigator.clipboard.writeText(roomId);
+        console.log(roomId)
+        toast.success('Room ID has been copied to your clipboard');
+    } catch (err) {
+        toast.error('Could not copy the Room ID');
+        console.error(err);
+    }
+}
+
+function leaveRoom() {
+  reactNavigator('/');
+}
 
   if (!location.state) {
     return <Navigate to="/" />;
@@ -74,7 +95,7 @@ const EditorPage = () => {
 
   return (
     <div className="flex h-screen bg-background text-foreground">
-      <div className="fixed top-4 right-4 z-50 bg-background/80 p-2 rounded-mdshadow-md">
+      <div className="fixed top-4 right-4 z-50 bg-background/80 p-2 rounded-md shadow-md">
         <ThemeToggle />
       </div>
 
@@ -87,7 +108,6 @@ const EditorPage = () => {
               alt="logo"
             />
           </div>
-          {/* <Separator className="my-4" /> */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-foreground">Connected</h3>
             <div className="flex flex-wrap gap-3">
@@ -98,10 +118,10 @@ const EditorPage = () => {
           </div>
         </div>
         <div className="p-4 space-y-4">
-          <button className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md hover:bg-secondary/90 transition font-bold">
+          <button className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md hover:bg-secondary/90 transition font-bold" onClick={copyRoomId}>
             Copy ROOM ID
           </button>
-          <button className="w-full bg-destructive text-destructive-foreground py-2 px-4 rounded-md hover:bg-destructive/90 transition font-bold">
+          <button className="w-full bg-destructive text-destructive-foreground py-2 px-4 rounded-md hover:bg-destructive/90 transition font-bold" onClick={leaveRoom}>
             Leave
           </button>
         </div>
@@ -110,11 +130,11 @@ const EditorPage = () => {
       <div className="flex-1 p-4 h-screen overflow-hidden">
         <div className="h-full w-full rounded-lg border bg-card shadow-sm">
           <Editor 
-          socketRef={socketRef}
-          roomId={roomId}
-          onCodeChange={(code) => {
+            socketRef={socketRef}
+            roomId={roomId}
+            onCodeChange={(code) => {
               codeRef.current = code;
-          }}
+            }}
           />
         </div>
       </div>

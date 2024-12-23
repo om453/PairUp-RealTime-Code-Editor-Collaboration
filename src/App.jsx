@@ -24,7 +24,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/editor/:roomID" element={<Editor />} />
+          <Route path="/editor/:roomId" element={<Editor />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
