@@ -7,7 +7,7 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import { useTheme } from "./ThemeProvider";
-import ACTIONS from '../Actions';
+import ACTIONS from '../../server/Actions';
 
 const Editor = ({socketRef, roomId , onCodeChange}) => {
     const editorRef = useRef(null);  //To store the reference of the editor instance

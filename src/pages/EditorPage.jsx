@@ -3,7 +3,7 @@ import Client from "../components/Client";
 import Editor from "../components/Editor";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { initSocket } from "../socket.js";
-import { ACTIONS } from "../Actions";
+import { ACTIONS } from "../../server/Actions.js";
 import {
   useLocation,
   useNavigate,
