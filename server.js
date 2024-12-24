@@ -1,10 +1,28 @@
 import express from 'express';
-const app = express();
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import ACTIONS from './src/Actions.js';
+import cors from 'cors';
+import ACTIONS from './Actions.js';  // Adjust the path based on your file structure
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Basic route for root endpoint
+app.get('/', (req, res) => {
+    res.json({ message: 'PairUp Backend Server is Running!' });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', message: 'Server is healthy' });
+});
 
 const server = createServer(app);
+
+// Socket.io setup
 const io = new Server(server, {
     cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:3000",
@@ -12,10 +30,6 @@ const io = new Server(server, {
     }
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.send('Server is running!');
-});
 
 // used to map socketId to username
 const userSocketMap = {};
@@ -74,10 +88,20 @@ io.on('connection', (socket) => {
         delete userSocketMap[socket.id];
         socket.leave();
     });
-    
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong!' });
+});
+
+// Handle 404 routes
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
 });
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });   
