@@ -25,7 +25,7 @@ const server = createServer(app);
 // Socket.io setup
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || "*",
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ['GET', 'POST'],
         credentials: true,
         transports: ['websocket']
@@ -50,7 +50,7 @@ function getAllConnectedClients(roomId) {
 
 // Add connection event listener
 io.on('connection', (socket) => {
-    console.log("New client connected", socket.id);
+    console.log('socket connected', socket.id);
     
    // Add join event listener
     socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
