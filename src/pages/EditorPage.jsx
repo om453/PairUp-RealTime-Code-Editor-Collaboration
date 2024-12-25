@@ -11,6 +11,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import Logo from '../assets/images/logo-removebg-preview.png';
 
 const EditorPage = () => {
   const socketRef = useRef(null);
@@ -104,7 +105,7 @@ function leaveRoom() {
           <div className="flex items-center gap-2 mb-8">
             <img
               className="w-96 h-15"
-              src="/src/assets/images/logo-removebg-preview.png"
+              src={Logo}
               alt="logo"
             />
           </div>
