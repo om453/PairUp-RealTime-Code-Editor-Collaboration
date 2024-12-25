@@ -2,6 +2,7 @@ import {v4 as uuid} from 'uuid';
 import {useState} from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Logo from '../assets/images/logo-removebg-preview.png';
 
 
 const HomePage = () => {
@@ -42,7 +43,7 @@ const joinRoom = () => {
           <img
             width={200}
             height={100}
-            src="/src/assets/images/logo-removebg-preview.png"
+            src={Logo}
             alt="Logo"
             className="object-contain" 
           />
