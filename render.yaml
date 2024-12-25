@@ -8,4 +8,4 @@
       - key: PORT
         value: 5000
       - key: FRONTEND_URL
-        value: "https://your-frontend-url.vercel.app"
+        value: "https://pairup-webapp.vercel.app/"
