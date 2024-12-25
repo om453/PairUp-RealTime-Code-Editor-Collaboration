@@ -6,6 +6,6 @@
     startCommand: node server/server.js
     envVars:
       - key: PORT
-        value: 3000
+        value: 5000
       - key: FRONTEND_URL
         value: "https://pairup-webapp.vercel.app/"
