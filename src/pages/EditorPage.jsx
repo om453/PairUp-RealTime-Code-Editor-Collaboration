@@ -24,45 +24,49 @@ const EditorPage = () => {
 
   useEffect(() => {
     const init = async () => {
-      socketRef.current = await initSocket();
-      socketRef.current.on("connect_error", (err) => handleErrors(err));
-      socketRef.current.on("connect_failed", (err) => handleErrors(err));
+      try {
+        socketRef.current = await initSocket();
+        
+        socketRef.current.on("connect_error", (err) => {
+          console.error("Socket connection error:", err);
+          toast.error("Socket connection failed, try again later.");
+          reactNavigator("/");
+        });
 
-      function handleErrors(e) {
-        console.log("socket error", e);
-        toast.error("Socket connection failed, try again later.");
+        socketRef.current.emit(ACTIONS.JOIN, {
+          roomId,
+          username: location.state?.username,
+        });
+
+        // Set up JOINED event listener
+        socketRef.current.on(
+          ACTIONS.JOINED,
+          ({ clients, username, socketId }) => {
+            if (username !== location.state?.username) {
+              toast.success(`${username} joined the room.`);
+            }
+            setClients(clients);
+
+            // Sync the code with the new user
+            socketRef.current.emit(ACTIONS.SYNC_CODE, {
+              code: codeRef.current,
+              socketId,
+            });
+          }
+        );
+
+        // Set up DISCONNECTED event listener
+        socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+          toast.success(`${username} left the room.`);
+          setClients((prev) => {
+            return prev.filter((client) => client.socketId !== socketId);
+          });
+        });    
+      } catch (err) {
+        console.error("Socket initialization error:", err);
+        toast.error("Failed to connect to the server");
         reactNavigator("/");
       }
-
-      socketRef.current.emit(ACTIONS.JOIN, {
-        roomId,
-        username: location.state?.username,
-      });
-
-      // Set up JOINED event listener
-      socketRef.current.on(
-        ACTIONS.JOINED,
-        ({ clients, username, socketId }) => {
-          if (username !== location.state?.username) {
-            toast.success(`${username} joined the room.`);
-          }
-          setClients(clients);
-
-          // Sync the code with the new user
-          socketRef.current.emit(ACTIONS.SYNC_CODE, {
-            code: codeRef.current,
-            socketId,
-        });
-        }
-      );
-
-      // Set up DISCONNECTED event listener
-      socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
-        toast.success(`${username} left the room.`);
-        setClients((prev) => {
-          return prev.filter((client) => client.socketId !== socketId);
-        });
-      });    
     };
     init();
 

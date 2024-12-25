@@ -8,6 +8,20 @@ export const initSocket = async () => {
         transports: ['websocket'],
         withCredentials: true
     };
-    const BACKEND_URL = import.meta.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
-    return io(BACKEND_URL, options);
+    
+    console.log('Backend URL:', import.meta.env.VITE_BACKEND_URL);
+    
+    const socket = io(import.meta.env.VITE_BACKEND_URL, options);
+    
+    return new Promise((resolve, reject) => {
+        socket.on('connect', () => {
+            console.log('Socket connected successfully');
+            resolve(socket);
+        });
+        
+        socket.on('connect_error', (error) => {
+            console.error('Socket connection error:', error);
+            reject(error);
+        });
+    });
 };
