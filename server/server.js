@@ -25,7 +25,7 @@ const server = createServer(app);
 // Socket.io setup
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || "http://localhost:3000",
+        origin: process.env.FRONTEND_URL || "*",
         methods: ['GET', 'POST'],
         credentials: true,
         transports: ['websocket']

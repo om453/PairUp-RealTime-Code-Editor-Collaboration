@@ -24,19 +24,20 @@ const EditorPage = () => {
 
   useEffect(() => {
     const init = async () => {
-      try {
-        socketRef.current = await initSocket();
-        
-        socketRef.current.on("connect_error", (err) => {
-          console.error("Socket connection error:", err);
-          toast.error("Socket connection failed, try again later.");
-          reactNavigator("/");
-        });
+      socketRef.current = await initSocket();
+      socketRef.current.on('connect_error', (err) => handleErrors(err));
+      socketRef.current.on('connect_failed', (err) => handleErrors(err));
 
-        socketRef.current.emit(ACTIONS.JOIN, {
-          roomId,
-          username: location.state?.username,
-        });
+      function handleErrors(e) {
+          console.log('socket error', e);
+          toast.error('Socket connection failed, try again later.');
+          reactNavigator('/');
+      }
+
+      socketRef.current.emit(ACTIONS.JOIN, {
+        roomId,
+        username: location.state?.username,
+      });
 
         // Set up JOINED event listener
         socketRef.current.on(
@@ -56,17 +57,17 @@ const EditorPage = () => {
         );
 
         // Set up DISCONNECTED event listener
-        socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
-          toast.success(`${username} left the room.`);
-          setClients((prev) => {
-            return prev.filter((client) => client.socketId !== socketId);
-          });
-        });    
-      } catch (err) {
-        console.error("Socket initialization error:", err);
-        toast.error("Failed to connect to the server");
-        reactNavigator("/");
-      }
+         socketRef.current.on(
+          ACTIONS.DISCONNECTED,
+          ({ socketId, username }) => {
+              toast.success(`${username} left the room.`);
+              setClients((prev) => {
+                  return prev.filter(
+                      (client) => client.socketId !== socketId
+                  );
+              });
+          }
+      );
     };
     init();
 
@@ -82,7 +83,6 @@ const EditorPage = () => {
   async function copyRoomId() {
     try {
         await navigator.clipboard.writeText(roomId);
-        console.log(roomId)
         toast.success('Room ID has been copied to your clipboard');
     } catch (err) {
         toast.error('Could not copy the Room ID');
@@ -90,9 +90,9 @@ const EditorPage = () => {
     }
 }
 
-function leaveRoom() {
-  reactNavigator('/');
-}
+  function leaveRoom() {
+    reactNavigator('/');
+  }
 
   if (!location.state) {
     return <Navigate to="/" />;
