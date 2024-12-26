@@ -28,12 +28,10 @@ PairUp is a Real-Time Collaborative Code Editor that enables developers to write
 - Toast notifications for user feedback.
 
 ## Technology Used
-- **Frontend:** React, CodeMirror, TailwindCSS.
-- **Backend:** Node.js, Express, Socket.IO.
-- **State Management:** React Context API, useState, useRef.
-- **Real-Time Communication:** WebSocket via Socket.IO.
-- **UI/UX Design:** TailwindCSS, Toast notifications.
-- **Other:** UUID for room generation.
+- **Frontend:** Reactjs, TailwindCSS
+- **Backend:** Node.js, Express
+- **Real-Time Communication:** WebSocket via Socket.io
+- **Code Editor:** CodeMirror
 
 ## Installation
 
