@@ -99,23 +99,24 @@ const EditorPage = () => {
   }
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="flex flex-col md:flex-row h-screen bg-background text-foreground">
       <div className="fixed top-4 right-4 z-50 bg-background/80 p-2 rounded-md shadow-md">
         <ThemeToggle />
       </div>
 
-      <div className="w-64 bg-card text-card-foreground flex flex-col shadow-lg">
+      {/* Sidebar */}
+      <div className="w-full md:w-64 bg-card text-card-foreground flex flex-col shadow-lg md:h-screen">
         <div className="p-4 flex-1">
-          <div className="flex items-center gap-2 mb-8">
+          <div className="flex items-center justify-center md:justify-start gap-2 mb-8">
             <img
-              className="w-96 h-15"
+              className="w-48 md:w-96 h-12 md:h-15 object-contain"
               src={Logo}
               alt="logo"
             />
           </div>
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-foreground">Connected</h3>
-            <div className="flex flex-wrap gap-3">
+            <h3 className="text-lg font-bold text-foreground text-center md:text-left">Connected</h3>
+            <div className="flex flex-wrap justify-center md:justify-start gap-3">
               {clients.map((client) => (
                 <Client key={client.socketId} username={client.username} />
               ))}
@@ -123,16 +124,23 @@ const EditorPage = () => {
           </div>
         </div>
         <div className="p-4 space-y-4">
-          <button className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md hover:bg-secondary/90 transition font-bold" onClick={copyRoomId}>
+          <button 
+            className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md hover:bg-secondary/90 transition font-bold" 
+            onClick={copyRoomId}
+          >
             Copy ROOM ID
           </button>
-          <button className="w-full bg-destructive text-destructive-foreground py-2 px-4 rounded-md hover:bg-destructive/90 transition font-bold" onClick={leaveRoom}>
+          <button 
+            className="w-full bg-destructive text-destructive-foreground py-2 px-4 rounded-md hover:bg-destructive/90 transition font-bold" 
+            onClick={leaveRoom}
+          >
             Leave
           </button>
         </div>
       </div>
 
-      <div className="flex-1 p-4 h-screen overflow-hidden">
+      {/* Editor Section */}
+      <div className="flex-1 p-2 md:p-4 h-[calc(100vh-16rem)] md:h-screen overflow-hidden">
         <div className="h-full w-full rounded-lg border bg-card shadow-sm">
           <Editor 
             socketRef={socketRef}
