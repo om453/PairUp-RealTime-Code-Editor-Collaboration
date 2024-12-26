@@ -26,10 +26,15 @@ const server = createServer(app);
 const io = new Server(server, {
     cors: {
         origin: process.env.FRONTEND_URL || "*",
-        methods: ['GET', 'POST'],
+        methods: ["GET", "POST"],
         credentials: true,
-        transports: ['websocket']
-    }
+        allowedHeaders: ["my-custom-header"],
+    },
+    allowEIO3: true,
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    transports: ['websocket', 'polling'],
+    path: '/socket.io/'
 });
 
 
@@ -50,7 +55,11 @@ function getAllConnectedClients(roomId) {
 
 // Add connection event listener
 io.on('connection', (socket) => {
-    console.log('socket connected', socket.id);
+    console.log('New client connected:', socket.id);
+    
+    socket.on('error', (error) => {
+        console.error('Socket error:', error);
+    });
     
    // Add join event listener
     socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
