@@ -82,11 +82,6 @@ io.on('connection', (socket) => {
         socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
     });
 
-    // Add sync code event listener
-    socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
-        io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
-    });
-
     // Add disconnection event listener to remove the user from the room
     socket.on('disconnecting', () => {
         const rooms = [...socket.rooms];
