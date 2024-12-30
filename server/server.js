@@ -27,6 +27,7 @@ const io = new Server(server, {
     cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST"],
+        allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
     },
     allowEIO3: true,
@@ -34,15 +35,6 @@ const io = new Server(server, {
     pingInterval: 25000,
     transports: ['websocket'],
     path: '/socket.io/',
-    handlePreflightRequest: (req, res) => {
-        res.writeHead(200, {
-            "Access-Control-Allow-Origin": process.env.FRONTEND_URL || "*",
-            "Access-Control-Allow-Methods": "GET,POST",
-            "Access-Control-Allow-Headers": "my-custom-header",
-            "Access-Control-Allow-Credentials": true
-        });
-        res.end();
-    }
 });
 
 
