@@ -3,7 +3,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/dracula.css';
 import 'codemirror/theme/neat.css';
-import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/clike/clike';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import { useTheme } from "./ThemeProvider";
@@ -19,7 +19,7 @@ const Editor = ({socketRef, roomId, onCodeChange}) => {
             if (!textArea) return;
             
             editorRef.current = CodeMirror.fromTextArea(textArea, {
-                mode: 'javascript',
+                mode: 'text/x-c++src',
                 theme: theme === 'dark' ? 'dracula' : 'neat',
                 autoCloseTags: true,
                 autoCloseBrackets: true,
@@ -27,7 +27,7 @@ const Editor = ({socketRef, roomId, onCodeChange}) => {
                 lineWrapping: true,
             });
 
-            editorRef.current.setValue('console.log("Hello, World!");');
+            editorRef.current.setValue('#include <iostream>\n\nusing namespace std;\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}');
 
             editorRef.current.on('change', (instance, changes) => {
                 const { origin } = changes;
