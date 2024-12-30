@@ -3,9 +3,9 @@ import { io } from 'socket.io-client';
 export const initSocket = async () => {
     const options = {
         'force new connection': true,
-        reconnectionAttempts: 5,
+        reconnectionAttempts: Infinity,
         timeout: 10000,
-        transports: ['websocket', 'polling'],
+        transports: ['websocket'],
         secure: true,
         rejectUnauthorized: false,
         reconnection: true,
@@ -14,7 +14,7 @@ export const initSocket = async () => {
         autoConnect: true
     };
     
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
         
     return io(BACKEND_URL, options);
 };

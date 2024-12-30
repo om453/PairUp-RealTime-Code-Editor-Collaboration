@@ -29,22 +29,15 @@ const server = createServer(app);
 // Socket.io setup
 const io = new Server(server, {
     cors: {
-        origin: ['https://pairup-webapp.vercel.app', 'http://localhost:3000'],
-        methods: ['GET', 'POST'],
-        credentials: true,
-        allowedHeaders: ['Content-Type', 'Authorization']
+        origin: ["https://pairup-webapp.vercel.app", "http://localhost:3000"],
+        methods: ["GET", "POST"],
+        credentials: true
     },
     allowEIO3: true,
     pingTimeout: 60000,
     pingInterval: 25000,
-    transports: ['websocket', 'polling'],
-    path: '/socket.io/',
-    cookie: {
-        name: 'io',
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true
-    }
+    transports: ['websocket'],
+    path: '/socket.io/'
 });
 
 
