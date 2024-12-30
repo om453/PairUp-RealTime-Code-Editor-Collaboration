@@ -30,6 +30,7 @@ const server = createServer(app);
 const io = new Server(server, {
     cors: {
         origin: ["https://pairup-webapp.vercel.app", "http://localhost:3000"],
+        allowedHeaders: ["Content-Type", "Authorization"],
         methods: ["GET", "POST"],
         credentials: true
     },

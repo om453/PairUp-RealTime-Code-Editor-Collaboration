@@ -14,7 +14,7 @@ export const initSocket = async () => {
         autoConnect: true
     };
     
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const BACKEND_URL = 'https://pairup-backend.onrender.com';
         
     return io(BACKEND_URL, options);
 };
