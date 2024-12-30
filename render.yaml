@@ -11,3 +11,5 @@ services:
         value: "https://pairup-webapp.vercel.app"
       - key: NODE_ENV
         value: "production"
+      - key: CORS_ORIGIN
+        value: "https://pairup-webapp.vercel.app"

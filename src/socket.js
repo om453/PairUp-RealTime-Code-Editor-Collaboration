@@ -5,11 +5,13 @@ export const initSocket = async () => {
         'force new connection': true,
         reconnectionAttempts: Infinity,
         timeout: 10000,
-        transports: ['websocket', 'polling'],
+        transports: ['websocket'],
         secure: true,
     };
     
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-    const wsUrl = BACKEND_URL.replace(/^http/, 'ws').replace(/^https/, 'wss');
+    
+    const wsUrl = BACKEND_URL;
+    
     return io(wsUrl, options);
 };

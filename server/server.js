@@ -25,14 +25,14 @@ const server = createServer(app);
 // Socket.io setup
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || "*",
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST"],
         credentials: true,
     },
     allowEIO3: true,
     pingTimeout: 60000,
     pingInterval: 25000,
-    transports: ['websocket', 'polling'],
+    transports: ['websocket'],
     path: '/socket.io/',
     handlePreflightRequest: (req, res) => {
         res.writeHead(200, {
