@@ -9,7 +9,3 @@ services:
         value: 5000
       - key: FRONTEND_URL
         value: "https://pairup-webapp.vercel.app"
-      - key: NODE_ENV
-        value: "production"
-      - key: CORS_ORIGIN
-        value: "https://pairup-webapp.vercel.app"
