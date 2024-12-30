@@ -10,9 +10,7 @@ export const initSocket = async () => {
         rejectUnauthorized: false
     };
     
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-    
-
-    
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+        
     return io(BACKEND_URL, options);
 };
