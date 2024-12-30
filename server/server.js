@@ -28,13 +28,21 @@ const io = new Server(server, {
         origin: process.env.FRONTEND_URL || "*",
         methods: ["GET", "POST"],
         credentials: true,
-        allowedHeaders: ["my-custom-header"],
     },
     allowEIO3: true,
     pingTimeout: 60000,
     pingInterval: 25000,
     transports: ['websocket', 'polling'],
-    path: '/socket.io/'
+    path: '/socket.io/',
+    handlePreflightRequest: (req, res) => {
+        res.writeHead(200, {
+            "Access-Control-Allow-Origin": process.env.FRONTEND_URL || "*",
+            "Access-Control-Allow-Methods": "GET,POST",
+            "Access-Control-Allow-Headers": "my-custom-header",
+            "Access-Control-Allow-Credentials": true
+        });
+        res.end();
+    }
 });
 
 
