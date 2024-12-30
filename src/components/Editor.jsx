@@ -27,7 +27,7 @@ const Editor = ({socketRef, roomId, onCodeChange}) => {
                 lineWrapping: true,
             });
 
-            editorRef.current.setValue('#include <iostream>\n\nusing namespace std;\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}');
+            editorRef.current.setValue('#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}');
 
             editorRef.current.on('change', (instance, changes) => {
                 const { origin } = changes;
